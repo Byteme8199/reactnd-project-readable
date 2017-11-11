@@ -1,0 +1,162 @@
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {getCategories} from '../actions/categories'
+import {getPostsById, createPost, editPost} from '../actions/posts'
+import serialize from 'form-serialize'
+import {success, error} from 'react-notification-system-redux';
+import uuidv1 from 'uuid/v1'
+import queryString from 'query-string'
+import Select from 'react-select'
+import intersection from 'lodash/intersection'
+
+
+class CreatePost extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      selectedCategory: '',
+      isEditing: queryString.parse(props.location.search).edit
+    }
+  }
+
+  componentDidMount() {
+    const {isEditing} = this.state
+    this.props.getCategories();
+    if (isEditing)
+      this.props.getPost(isEditing)
+        .then(res => {
+          this.setState({selectedCategory: {value: res.category, label: res.category}})
+        })
+        .catch(e => this.props.history.push('/'))
+  }
+
+
+  componentWillUnmount() {
+    this.props.clearPost()
+  }
+
+  logChange(val) {
+    this.setState({selectedCategory: val})
+  }
+
+  handleSubmit(event) {
+    event.preventDefault()
+    let form = document.querySelector('#create-post'),
+      formData = serialize(form, {hash: true}),
+      data = {
+        ...formData,
+        id: uuidv1(),
+        timestamp: Date.now()
+      },
+      edit = this.state.isEditing
+
+    let validate = this.validator(data)
+    if (!validate) {
+      console.log("Error in validation");
+      return
+    }
+
+
+    if(Boolean(edit)) {
+      this.props.editPost(edit,{title: data.title,body:data.body}).then(res => {
+        form.reset()
+        this.props.history.push(`/`)
+      })
+        .catch(e => {
+          console.log(e)
+        })
+    } else {
+      this.props.createPost(data).then(res => {
+        form.reset()
+        this.props.history.push(`/`)
+      })
+        .catch(e => {
+          console.log(e);
+        })
+    }
+
+
+
+  }
+
+  validator(data) {
+    let requiredKeys = ['title', 'author', 'body', 'category'],
+      dataKeys = Object.keys(data)
+
+    return intersection(requiredKeys, dataKeys).length === requiredKeys.length || this.state.isEditing
+  }
+
+  render() {
+    let categories = this.props.category.list,
+      options = categories ? categories.map(c => {
+        return {value: c.name, label: c.name}
+      }) : []
+
+    let {isEditing} = this.state,
+      {post} = this.props.post
+    //isEditing && this.props
+    return (isEditing && post) || !isEditing ?
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <h3 className="panel-title">Create Post</h3>
+        </div>
+        <div className="panel-body">
+          <form id="create-post">
+            <div className="form-group">
+              <label htmlFor="exampleInput1">Title</label>
+              <input defaultValue={post && isEditing ? post.title : ''} type="text" className="form-control"
+                      name="title"/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="exampleInput2">Author</label>
+              <input type="text" defaultValue={post && isEditing ? post.author : ''} className="form-control"
+                      disabled={Boolean(isEditing)}  name="author"/>
+            </div>
+            <div className="form-group">
+              <label htmlFor="category">Category</label>
+              {categories
+                ?
+                <Select
+                  disabled={Boolean(isEditing)}
+                  name="category"
+                  options={options}
+                  value={this.state.selectedCategory}
+                  onChange={this.logChange.bind(this)}
+                /> : null
+              }
+
+            </div>
+            <div className="form-group">
+              <label htmlFor="exampleInputDescription">Body</label>
+              <textarea defaultValue={post && isEditing ? post.body : ''} className="form-control" name="body" id=""
+                        cols="30" rows="10"/>
+            </div>
+            <button className="btn btn-default" onClick={() => this.props.history.push('/')}>Cancel</button>
+            <button type="submit" className="btn pull-right btn-primary" onClick={this.handleSubmit.bind(this)}>Submit</button>
+          </form>
+        </div>
+      </div>: null
+  }
+}
+
+const mapStateToProps = (store, ownProps) => {
+  return {
+    category: store.category,
+    post: store.post
+  }
+
+}
+
+const mapDispatchToProps = (dispatch, ownProps) => {
+  return {
+    getCategories: () => dispatch(getCategories()),
+    createPost: (data) => dispatch(createPost(data)),
+    editPost: (postId,data) => dispatch(editPost(postId,data)),
+    clearPost: () => dispatch({type:'CLEAR_POST'}),
+    getPost: (id) => dispatch(getPostsById(id)),
+    error: (opt) => dispatch(error(opt)),
+    success: (opt) => dispatch(success(opt))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(CreatePost)

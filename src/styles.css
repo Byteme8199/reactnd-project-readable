@@ -1,0 +1,25 @@
+/* Global Styles Only */
+
+.header-spacing { margin-top: 80px; }
+
+.clickable { cursor: pointer }
+
+.text-danger, .text-red { color: red }
+.text-success, .text-green { color: green }
+.text-warning, .text-yellow { color: yellow }
+.fw { width: 100%; text-align: middle}
+.spacer { margin-right: 10px; }
+.divider { padding: 10px 0px; margin: 5px 0px; border-bottom: 1px solid #dedede }
+
+.list-group-item { text-transform: capitalize }
+.sort-right { width: 20%; }
+.with-sorting { height: 35px; display: inline-block; padding-top: 6px;}
+
+#posts .post { padding: 10px 0px; margin: 5px 0px; border-bottom: 1px solid #dedede }
+#posts .post:last-of-type { border-bottom: none; }
+.post-title { font-weight: bold; font-size: 12pt; letter-spacing: 1.4px; padding-bottom: 4px; }
+.post-sub { font-size: 11px; }
+.post-body { padding: 15px 0px 30px 0px; font-size: 14px; word-wrap: break-word; }
+.post-date { color: grey}
+.post-author { font-weight: bold; font-weight: 14px; }
+.comments-block { width: 30px; height: auto; font-size: 14px; }
