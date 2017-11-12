@@ -23,15 +23,14 @@ class Home extends Component {
     return <div id="posts">
         {
           sorted ? sorted.map((pc, i) => {
-              return <Post
-                key={i}
-                data={pc}
-                comments={this.props.post.comments}
-                votePost={this.props.votePost}
-                deletePost={this.props.deletePost}
-              />
-            })
-            : <div>No Posts</div>
+            return <Post
+              key={i}
+              data={pc}
+              comments={this.props.post.comments}
+              votePost={this.props.votePost}
+              deletePost={this.props.deletePost}
+            />
+          }) : null
         }
       </div>
   }
