@@ -4,7 +4,7 @@ export default class Comment extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      isEditing: false
+      edit: false
     }
   }
 
@@ -15,13 +15,13 @@ export default class Comment extends Component {
     }
     this.props.editComment(id,data)
       .then(r =>{
-        this.setState({isEditing: false})
+        this.setState({edit: false})
       })
 
   }
   render() {
     const {data} = this.props;
-    let {isEditing} = this.state
+    let {edit} = this.state
     return (
       <div className="divider">
         <div className="row">
@@ -36,7 +36,7 @@ export default class Comment extends Component {
               <span className="post-author">{data.author}</span>
               <p>
                 {
-                  isEditing ? <input type="text" ref="comment" defaultValue={data.body} className="form-control" />
+                  edit ? <input type="text" ref="comment" defaultValue={data.body} className="form-control" />
                   : data.body
                 }
               </p>
@@ -47,12 +47,12 @@ export default class Comment extends Component {
 
               <span className="text-red fa fa-trash clickable spacer" onClick={() => this.props.deleteComment(data.id)}></span>
               {
-                isEditing ?
+                edit ?
                   <span>
-                    <span onClick={() => this.setState({isEditing:false})} className="text-grey clickable fa fa-ban spacer"></span> 
+                    <span onClick={() => this.setState({edit:false})} className="text-grey clickable fa fa-ban spacer"></span> 
                     <span onClick={this.handleEditComment.bind(this,data.id)} className="text-green clickable fa fa-check spacer"></span>
                   </span>
-                : <span onClick={() => this.setState({isEditing:true})} className="text-grey clickable fa fa-edit"></span>
+                : <span onClick={() => this.setState({edit:true})} className="text-grey clickable fa fa-edit"></span>
               }
 
             </div>

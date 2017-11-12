@@ -3,7 +3,6 @@ import {connect} from 'react-redux'
 import {getCategories} from '../actions/categories'
 import {getPostsById, createPost, editPost} from '../actions/posts'
 import serialize from 'form-serialize'
-import {success, error} from 'react-notification-system-redux';
 import uuidv1 from 'uuid/v1'
 import queryString from 'query-string'
 import Select from 'react-select'
@@ -15,15 +14,15 @@ class CreatePost extends Component {
     super(props)
     this.state = {
       selectedCategory: '',
-      isEditing: queryString.parse(props.location.search).edit
+      edit: queryString.parse(props.location.search).edit
     }
   }
 
   componentDidMount() {
-    const {isEditing} = this.state
+    const {edit} = this.state
     this.props.getCategories();
-    if (isEditing)
-      this.props.getPost(isEditing)
+    if (edit)
+      this.props.getPost(edit)
         .then(res => {
           this.setState({selectedCategory: {value: res.category, label: res.category}})
         })
@@ -48,7 +47,7 @@ class CreatePost extends Component {
         id: uuidv1(),
         timestamp: Date.now()
       },
-      edit = this.state.isEditing
+      edit = this.state.edit
 
     let validate = this.validator(data)
     if (!validate) {
@@ -83,7 +82,7 @@ class CreatePost extends Component {
     let requiredKeys = ['title', 'author', 'body', 'category'],
       dataKeys = Object.keys(data)
 
-    return intersection(requiredKeys, dataKeys).length === requiredKeys.length || this.state.isEditing
+    return intersection(requiredKeys, dataKeys).length === requiredKeys.length || this.state.edit
   }
 
   render() {
@@ -92,10 +91,10 @@ class CreatePost extends Component {
         return {value: c.name, label: c.name}
       }) : []
 
-    let {isEditing} = this.state,
+    let {edit} = this.state,
       {post} = this.props.post
-    //isEditing && this.props
-    return (isEditing && post) || !isEditing ?
+    //edit && this.props
+    return (edit && post) || !edit ?
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">Create Post</h3>
@@ -103,33 +102,29 @@ class CreatePost extends Component {
         <div className="panel-body">
           <form id="create-post">
             <div className="form-group">
-              <label htmlFor="exampleInput1">Title</label>
-              <input defaultValue={post && isEditing ? post.title : ''} type="text" className="form-control"
-                      name="title"/>
+              <label htmlFor="title">Title</label>
+              <input defaultValue={post && edit ? post.title : ''} type="text" className="form-control" name="title"/>
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInput2">Author</label>
-              <input type="text" defaultValue={post && isEditing ? post.author : ''} className="form-control"
-                      disabled={Boolean(isEditing)}  name="author"/>
+              <label htmlFor="author">Author</label>
+              <input type="text" defaultValue={post && edit ? post.author : ''} className="form-control" disabled={Boolean(edit)} name="author"/>
             </div>
             <div className="form-group">
               <label htmlFor="category">Category</label>
               {categories
                 ?
                 <Select
-                  disabled={Boolean(isEditing)}
+                  disabled={Boolean(edit)}
                   name="category"
                   options={options}
                   value={this.state.selectedCategory}
                   onChange={this.logChange.bind(this)}
                 /> : null
               }
-
             </div>
             <div className="form-group">
-              <label htmlFor="exampleInputDescription">Body</label>
-              <textarea defaultValue={post && isEditing ? post.body : ''} className="form-control" name="body" id=""
-                        cols="30" rows="10"/>
+              <label htmlFor="body">Body</label>
+              <textarea defaultValue={post && edit ? post.body : ''} className="form-control" name="body" id="" />
             </div>
             <button className="btn btn-default" onClick={() => this.props.history.push('/')}>Cancel</button>
             <button type="submit" className="btn pull-right btn-primary" onClick={this.handleSubmit.bind(this)}>Submit</button>
@@ -153,9 +148,7 @@ const mapDispatchToProps = (dispatch, ownProps) => {
     createPost: (data) => dispatch(createPost(data)),
     editPost: (postId,data) => dispatch(editPost(postId,data)),
     clearPost: () => dispatch({type:'CLEAR_POST'}),
-    getPost: (id) => dispatch(getPostsById(id)),
-    error: (opt) => dispatch(error(opt)),
-    success: (opt) => dispatch(success(opt))
+    getPost: (id) => dispatch(getPostsById(id))
   }
 }
 

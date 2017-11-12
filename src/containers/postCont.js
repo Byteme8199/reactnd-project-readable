@@ -17,17 +17,12 @@ class PostCont extends Component {
   }
 
   render() {
-    return <PostDetail
-      {...this.props}
-    />
+    return <PostDetail {...this.props} />
   }
 }
 
 const mapStateToProps = (store,ownProps) => {
-  return {
-    post: store.post
-  }
-
+  return { post: store.post }
 }
 
 const mapDispatchToProps = (dispatch,ownProps) => {
