@@ -66,6 +66,7 @@ class Home extends Component {
                   <div className="panel-heading">
                     <span className="panel-title with-sorting">Posts</span>
                     <div className="pull-right sort-right">
+                      {/** Select is an easy to use drop-down dynamic component maker */}
                       <Select
                         name="sort-selection"
                         options={options}

@@ -6,7 +6,9 @@ const CommentForm = (props) => {
   const submit = e => {
     e.preventDefault()
     let form = document.querySelector('#comment-form');
+    // serialize takes the form and serializes the form fields into prettier json
     let data = serialize(form,{ hash: true })
+    // uuid creates a nice uuid at random, should never run into dupes this way
     props.publishComment({...data, id: uuidv1(),parentId:props.post.id,timestamp: Date.now()})
     form.reset()
   }

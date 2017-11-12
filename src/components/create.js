@@ -6,15 +6,15 @@ import serialize from 'form-serialize'
 import uuidv1 from 'uuid/v1'
 import queryString from 'query-string'
 import Select from 'react-select'
-import intersection from 'lodash/intersection'
-
 
 class CreatePost extends Component {
   constructor(props) {
     super(props)
     this.state = {
       selectedCategory: '',
-      edit: queryString.parse(props.location.search).edit
+      // queryString takes url (eg. create?edit=ID) parameters and makes them prettier json
+      edit: queryString.parse(props.location.search).edit,
+      errors: null
     }
   }
 
@@ -29,7 +29,6 @@ class CreatePost extends Component {
         .catch(e => this.props.history.push('/'))
   }
 
-
   componentWillUnmount() {
     this.props.clearPost()
   }
@@ -38,26 +37,41 @@ class CreatePost extends Component {
     this.setState({selectedCategory: val})
   }
 
+  validate(title, author, category, body) {
+    if((title === undefined) + (author === undefined) + (category === undefined) + (body === undefined) > 0){
+      return false
+    } else {
+      return true
+    }
+  }
+
   handleSubmit(event) {
     event.preventDefault()
-    let form = document.querySelector('#create-post'),
-      formData = serialize(form, {hash: true}),
-      data = {
-        ...formData,
-        id: uuidv1(),
-        timestamp: Date.now()
-      },
-      edit = this.state.edit
+    let form = document.querySelector('#create-post')
+    
+    // serialize takes the form and serializes the form fields into prettier json
+    let formData = serialize(form, {hash: true})
+    
+    let data = {
+      ...formData,
+      // uuid creates a nice uuid at random, should never run into dupes this way
+      id: uuidv1(),
+      timestamp: Date.now()
+    }
+    
+    let edit = this.state.edit
 
-    let validate = this.validator(data)
-    if (!validate) {
-      console.log("Error in validation");
+    const errors = this.validate(data.title, data.author, data.category, data.body);
+
+    if(!errors){
+      this.setState({errors: "Please fill out every form field"})
       return
+    } else {
+      this.setState({errors: null})
     }
 
-
     if(Boolean(edit)) {
-      this.props.editPost(edit,{title: data.title,body:data.body}).then(res => {
+      this.props.editPost(edit,{title: data.title,author: data.author, category: data.category, body:data.body}).then(res => {
         form.reset()
         this.props.history.push(`/`)
       })
@@ -73,16 +87,6 @@ class CreatePost extends Component {
           console.log(e);
         })
     }
-
-
-
-  }
-
-  validator(data) {
-    let requiredKeys = ['title', 'author', 'body', 'category'],
-      dataKeys = Object.keys(data)
-
-    return intersection(requiredKeys, dataKeys).length === requiredKeys.length || this.state.edit
   }
 
   render() {
@@ -91,10 +95,12 @@ class CreatePost extends Component {
         return {value: c.name, label: c.name}
       }) : []
 
-    let {edit} = this.state,
-      {post} = this.props.post
-    //edit && this.props
+    let {edit} = this.state
+    let {post} = this.props.post
+
     return (edit && post) || !edit ?
+    <div>
+      { (this.state.errors) ? <div className="alert alert-danger" role="alert">{ this.state.errors }</div> : null }
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">Create Post</h3>
@@ -103,34 +109,36 @@ class CreatePost extends Component {
           <form id="create-post">
             <div className="form-group">
               <label htmlFor="title">Title</label>
-              <input defaultValue={post && edit ? post.title : ''} type="text" className="form-control" name="title"/>
+              <input defaultValue={post && edit ? post.title : ''} required type="text" className="form-control" name="title"/>
             </div>
             <div className="form-group">
               <label htmlFor="author">Author</label>
-              <input type="text" defaultValue={post && edit ? post.author : ''} className="form-control" disabled={Boolean(edit)} name="author"/>
+              <input type="text" defaultValue={post && edit ? post.author : ''} required className="form-control" name="author"/>
             </div>
             <div className="form-group">
               <label htmlFor="category">Category</label>
               {categories
                 ?
+                // Select is an easy to use drop-down dynamic component maker
                 <Select
-                  disabled={Boolean(edit)}
                   name="category"
                   options={options}
                   value={this.state.selectedCategory}
                   onChange={this.logChange.bind(this)}
+                  required
                 /> : null
               }
             </div>
             <div className="form-group">
               <label htmlFor="body">Body</label>
-              <textarea defaultValue={post && edit ? post.body : ''} className="form-control" name="body" id="" />
+              <textarea defaultValue={post && edit ? post.body : ''} required className="form-control" name="body" id="" />
             </div>
             <button className="btn btn-default" onClick={() => this.props.history.push('/')}>Cancel</button>
             <button type="submit" className="btn pull-right btn-primary" onClick={this.handleSubmit.bind(this)}>Submit</button>
           </form>
         </div>
-      </div>: null
+      </div>
+    </div>: null
   }
 }
 
