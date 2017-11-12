@@ -1,6 +1,8 @@
+const REACT_APP_BACKEND = "http://localhost:3001/"
+
 export function getPostComments(postId) {
   return function (dispatch) {
-    return fetch(process.env.REACT_APP_BACKEND + 'posts/' + postId + '/comments/', { method: "GET", headers: { 'Authorization': 'whatever-you-want' }})
+    return fetch(REACT_APP_BACKEND + 'posts/' + postId + '/comments/', { method: "GET", headers: { 'Authorization': 'whatever-you-want' }})
       .then((resp) => resp.json())
       .then(function(data) {
         dispatch({type:'GET_POST_COMMENTS_SUCCESS', payload: {parentId: postId, data: data}});
@@ -14,7 +16,7 @@ export function getPostComments(postId) {
 
 export function createComment(data) {
   return function (dispatch) {
-    return fetch(process.env.REACT_APP_BACKEND + 'comments/', { method: 'post',
+    return fetch(REACT_APP_BACKEND + 'comments/', { method: 'post',
           headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
       })
@@ -35,7 +37,7 @@ export function voteComment(commentId,vote) {
     option: vote
   }
   return function (dispatch) {
-    return fetch(process.env.REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: 'post',
+    return fetch(REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: 'post',
           headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
       })
@@ -53,7 +55,7 @@ export function voteComment(commentId,vote) {
 export function editComment(commentId,data) {
 
   return function (dispatch) {
-    return fetch(process.env.REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: 'put',
+    return fetch(REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: 'put',
           headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
           body: JSON.stringify(data)
       })
@@ -71,7 +73,7 @@ export function editComment(commentId,data) {
 export function deleteComment(commentId) {
 
   return function (dispatch) {
-    return fetch(process.env.REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: "DELETE", headers: { 'Authorization': 'whatever-you-want' }})
+    return fetch(REACT_APP_BACKEND + 'comments/' + commentId + '/', { method: "DELETE", headers: { 'Authorization': 'whatever-you-want' }})
       .then((resp) => resp.json())
       .then(function(data){
         dispatch({type:'DELETE_COMMENT_SUCCESS', payload: data})

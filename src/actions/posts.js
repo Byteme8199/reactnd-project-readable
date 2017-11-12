@@ -1,6 +1,8 @@
+const REACT_APP_BACKEND = "http://localhost:3001/"
+
 export function getPosts() {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts/', { method: 'GET', headers: { 'Authorization': 'whatever-you-want' } })
+        return fetch(REACT_APP_BACKEND + 'posts/', { method: 'GET', headers: { 'Authorization': 'whatever-you-want' } })
             .then((resp) => resp.json())
             .then(function(data) {
                 dispatch({ type: 'GET_POST_SUCCESS', payload: data });
@@ -14,7 +16,7 @@ export function getPosts() {
 
 export function getPostsById(id) {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts/' + id, { headers: { 'Authorization': 'whatever-you-want' } })
+        return fetch(REACT_APP_BACKEND + 'posts/' + id, { headers: { 'Authorization': 'whatever-you-want' } })
             .then((resp) => resp.json())
             .then(function(data) {
                 dispatch({ type: 'GET_SINGLE_POST_SUCCESS', payload: data });
@@ -29,7 +31,7 @@ export function getPostsById(id) {
 
 export function getPostsByCategory(category) {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + category + '/posts/', { headers: { 'Authorization': 'whatever-you-want' } })
+        return fetch(REACT_APP_BACKEND + category + '/posts/', { headers: { 'Authorization': 'whatever-you-want' } })
             .then((resp) => resp.json())
             .then(function(data) {
                 dispatch({ type: 'GET_POST_SUCCESS', payload: data });
@@ -44,7 +46,7 @@ export function getPostsByCategory(category) {
 
 export function createPost(post) {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts', {
+        return fetch(REACT_APP_BACKEND + 'posts', {
             method: 'post',
             headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(post)
@@ -65,7 +67,7 @@ export function votePost(postId, vote) {
         option: vote
     }
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts/' + postId + '/', {
+        return fetch(REACT_APP_BACKEND + 'posts/' + postId + '/', {
             method: 'post',
             headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -83,7 +85,7 @@ export function votePost(postId, vote) {
 
 export function editPost(postId, data) {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts/' + postId + '/', {
+        return fetch(REACT_APP_BACKEND + 'posts/' + postId + '/', {
             method: 'put',
             headers: { 'Authorization': 'whatever-you-want', 'Accept': 'application/json', 'Content-Type': 'application/json' },
             body: JSON.stringify(data)
@@ -101,7 +103,7 @@ export function editPost(postId, data) {
 
 export function deletePost(postId) {
     return function(dispatch) {
-        return fetch(process.env.REACT_APP_BACKEND + 'posts/' + postId + '/', { method: 'DELETE', headers: { 'Authorization': 'whatever-you-want' } })
+        return fetch(REACT_APP_BACKEND + 'posts/' + postId + '/', { method: 'DELETE', headers: { 'Authorization': 'whatever-you-want' } })
             .then((resp) => resp.json())
             .then(function(data) {
                 dispatch({ type: 'DELETE_POST_SUCCESS', payload: postId });
