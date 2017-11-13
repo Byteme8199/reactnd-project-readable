@@ -27,7 +27,7 @@ class App extends Component {
         <Nav />
         <Route exact path="/" component={HomeCont}/>
         <Route path="/category/:id" component={CategoryCont}/>
-        <Route path="/post/:id" component={PostCont}/>
+        <Route path="/:category/:id" component={PostCont}/>
         <Route exact path="/create" component={CreatePost}/>
       </div>
     </Provider>

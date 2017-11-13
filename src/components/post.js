@@ -14,13 +14,14 @@ const Post = (props) => {
           <span className="fa fa-arrow-down text-red fw clickable" onClick={() => props.votePost(data.id, 'downVote')}></span>
         </div>
         <div className="post-title">
-          <b><Link to={'/post/' + data.id}>{data.title}</Link></b> 
+          <b><Link to={'/' + data.category + '/' + data.id}>{data.title}</Link></b> 
         </div>
         <span className="post-sub">
             <span className="post-author">by {data.author} | </span>
             <span className="post-date">{convertDate(data.timestamp)} | </span>
             <span className="post-comments">{hasComment ? comments[data.id].length : 0} {hasComment && comments[data.id].length === 1 ? `comment` : `comments`} | </span>
-            <span className="post-edit clickable" onClick={() => props.history.push('/create?edit=' + data.id)}> edit</span>
+            <span className="post-edit clickable" onClick={() => props.history.push('/create?edit=' + data.id)}> edit | </span>
+            <span className="post-delete clickable" onClick={() => props.deletePost(data.id)}> delete</span>
         </span>
       </div>
     </div>

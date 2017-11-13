@@ -104,7 +104,6 @@ export function editPost(postId, data) {
 export function deletePost(postId) {
     return function(dispatch) {
         return fetch(REACT_APP_BACKEND + 'posts/' + postId + '/', { method: 'DELETE', headers: { 'Authorization': 'whatever-you-want' } })
-            .then((resp) => resp.json())
             .then(function(data) {
                 dispatch({ type: 'DELETE_POST_SUCCESS', payload: postId });
                 return data;
