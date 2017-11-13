@@ -8,19 +8,19 @@ import {getPostsByCategory, deletePost, votePost} from '../actions/posts'
 class CategoryCont extends Component {
 
   componentDidMount() {
-    const category = this.props.match.params.id
+    const category = this.props.match.params.category
     this.props.getCategories()
     this.props.getPostsByCategory(category)
   }
   componentWillReceiveProps(nextProps) {
-    if(this.props.match.params.id !== nextProps.match.params.id) {
-      this.props.getPostsByCategory(nextProps.match.params.id)
+    if(this.props.match.params.category !== nextProps.match.params.category) {
+      this.props.getPostsByCategory(nextProps.match.params.category)
     }
   }
   render() {
     return (
       <Home {...this.props}/>
-    )
+    ) 
   }
 }
 

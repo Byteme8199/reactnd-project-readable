@@ -6,6 +6,7 @@ import serialize from 'form-serialize'
 import uuidv1 from 'uuid/v1'
 import queryString from 'query-string'
 import Select from 'react-select'
+import Alert from './alert'
 
 class CreatePost extends Component {
   constructor(props) {
@@ -100,7 +101,7 @@ class CreatePost extends Component {
 
     return (edit && post) || !edit ?
     <div>
-      { (this.state.errors) ? <div className="alert alert-danger" role="alert">{ this.state.errors }</div> : null }
+      { (this.state.errors) ? <Alert text={ this.state.errors } type="danger" /> : null }
       <div className="panel panel-default">
         <div className="panel-heading">
           <h3 className="panel-title">Create Post</h3>

@@ -5,6 +5,8 @@ import CommentForm from './commentForm'
 import Rodal from 'rodal';
 import 'rodal/lib/rodal.css';
 import isEmpty from 'lodash/isEmpty'
+import {Link} from 'react-router-dom'
+import Alert from './alert'
 
 class PostDetails extends Component {
   constructor(props) {
@@ -93,7 +95,12 @@ class PostDetails extends Component {
         </div>
       </div>
       {this.showDeleteModal()}
-    </div> : null
+    </div> 
+    :
+    <div className="row">
+      <Alert text="Post not found" type="danger" />
+      <div className="col-xs-12"><Link to="/"><i className="fa fa-angle-double-left" aria-hidden="true"></i> back</Link></div>
+    </div>
   }
 
 }

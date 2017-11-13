@@ -28,7 +28,6 @@ const mapStateToProps = (store,ownProps) => {
     category: store.category,
     post: store.post
   }
-
 }
 
 const mapDispatchToProps = (dispatch,ownProps) => {

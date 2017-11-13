@@ -55,7 +55,7 @@ class Home extends Component {
         <div className="row">
           <div className="col-xs-12 col-sm-2">
             <ul className="list-group">
-              <li className={`list-group-item clickable ${this.props.match.params.id ? '': 'active'}`} onClick={() => this.props.history.push('/')}> All Categories</li>
+              <li className={`list-group-item clickable ${this.props.match.params.category ? '': 'active'}`} onClick={() => this.props.history.push('/')}> All Categories</li>
               {this.renderCategories()}
             </ul>
           </div>
