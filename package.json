@@ -17,7 +17,8 @@
     "redux-devtools-extension": "^2.13.2",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.2.0",
-    "rodal": "^1.6.1"
+    "rodal": "^1.6.1",
+    "uuid": "^3.1.0"
   },
   "scripts": {
     "start": "react-scripts start",

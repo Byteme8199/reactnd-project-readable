@@ -18,14 +18,28 @@ class PostDetails extends Component {
 
   getComments() {
     const {id} = this.props.match.params
-    const list = this.props.post.comments[id]
-    return list ? list.map(l =>
-        <Comment
-          key={l.id} data={l}
-          voteComment={this.props.voteComment}
-          editComment={this.props.editComment}
-          deleteComment={this.props.deleteComment}
-        />) : null
+    let hasComments = Boolean(this.props.post.comments && this.props.post.comments[id])
+    if(hasComments) {
+      const list = this.props.post.comments[id]
+      return list ? list.map(l =>
+          <Comment
+            key={l.id} data={l}
+            voteComment={this.props.voteComment}
+            editComment={this.props.editComment}
+            deleteComment={this.props.deleteComment}
+          />) : null
+    }
+  }
+
+  getCommentsNum() {
+    const {id} = this.props.match.params
+    let hasComments = Boolean(this.props.post.comments && this.props.post.comments[id])
+    if(hasComments) {
+      const list = this.props.post.comments[id]
+      return (
+        (list.length === 1 ? `${list.length} comment` : `${list.length} comments`)
+      ) 
+    }
   }
 
   deletePost(id) {
@@ -84,7 +98,7 @@ class PostDetails extends Component {
         </p>
 
         <div className="panel panel-default">
-          <div className="panel-heading">Comments</div>
+          <div className="panel-heading">Comments <span className="pull-right">{ this.getCommentsNum() }</span></div>
           <div className="panel-body">
             <CommentForm
               publishComment={this.props.publishComment}
